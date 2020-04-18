@@ -1,0 +1,13 @@
+[package]
+name    = "list-select"
+version = "0.1.0"
+authors = ["Thibaut Brandscheid <randaltor@web.de>"]
+edition = "2018"
+build   = "build.rs"
+
+[dependencies]
+clap        = "2.33.0"
+lazy_static = "1.4.0"
+tempfile    = "3.1.0"
+tuikit      = "0.3.2"
+nix         = "0.14.0"
