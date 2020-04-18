@@ -32,7 +32,7 @@ $ ls -1 | list-select
    list-select.d
 
 # multiple input strings are merged into one vertical list
-$ echo -e "foo\nbar\n" "hello\nworld" | list-select
+$ list-select foo bar hello world
    foo
    bar
 >  hello
