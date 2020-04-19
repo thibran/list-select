@@ -8,6 +8,10 @@ Tested on Linux using `fish` shell (should work on all Unix platforms).
 
 
 ## Usage
+
+If the list contains only a single entry, the entry will be directly
+returned. An empty list triggers an error.
+
 ``` bash
 USAGE:
     list-select <ROWS>...
@@ -49,7 +53,7 @@ $ list-select foo bar hello world
 | 2         | No Match found or canceled |
 
 
-# brainstorming
+# Brainstorming
 
 ## options that could be added
 ``` bash

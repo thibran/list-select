@@ -21,12 +21,12 @@ fn args_to_config() -> Vec<String> {
     use std::os::unix::io::AsRawFd;
     const NAME: &str = env!("CARGO_PKG_NAME");
 
-    let is_pipe = || match isatty(io::stdin().as_raw_fd()) {
+    let is_pipe = match isatty(io::stdin().as_raw_fd()) {
         Ok(false) => true,
         _ => false,
     };
 
-    let row_default = if is_pipe() {
+    let row_default = if is_pipe {
         let mut buffer = String::new();
         let stdin = io::stdin();
         let mut handle = stdin.lock();
@@ -42,10 +42,10 @@ fn args_to_config() -> Vec<String> {
         .arg(
             Arg::with_name("ROWS") // positional arguments
                 .required(true)
-                .default_value(&row_default)
                 .multiple(true)
                 .empty_values(false)
                 .help("rows to display")
+                .default_value(&row_default)
                 .hide_default_value(true),
         )
         .get_matches();
@@ -105,13 +105,17 @@ fn tui(lines: Vec<String>) -> String {
                 drop(term);
                 process::exit(2);
             }
-            Event::Key(Key::Enter) => {
+            Event::Key(Key::Enter) | Event::Key(Key::Tab) => {
                 return lines.get(row).unwrap().to_owned()
             }
-            Event::Key(Key::Up) => {
+            Event::Key(Key::Up)
+            | Event::Key(Key::Ctrl('p'))
+            | Event::Key(Key::Char('k')) => {
                 row = if row != 0 { max(row - 1, 0) } else { 0 }
             }
-            Event::Key(Key::Down) => row = min(row + 1, height - 1),
+            Event::Key(Key::Down)
+            | Event::Key(Key::Ctrl('n'))
+            | Event::Key(Key::Char('j')) => row = min(row + 1, height - 1),
             _ => {}
         }
         lines.iter().enumerate().for_each(|(i, v)| {
